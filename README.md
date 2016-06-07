@@ -1,5 +1,4 @@
 # The Principles of OOD in Kotlin 1.0.2
-=======================================
 
 # :tada: S.O.L.I.D: The First 5 Principles of Object Oriented Design
 
