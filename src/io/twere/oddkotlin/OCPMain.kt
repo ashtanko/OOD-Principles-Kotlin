@@ -15,11 +15,25 @@ final class LaserBeam : CanShoot {
 }
 
 final class WeaponsComposite(var weapons: Array<CanShoot>) {
-
+    fun shoot(): String {
+        return weapons.map { it -> it.shoot() }.get(0)
+    }
 }
 
+final class RocketLauncher : CanShoot {
+    override fun shoot(): String {
+        return "Whoosh!"
+    }
+}
 
 fun main(args: Array<String>) {
+    val laser = LaserBeam()
+    var weapons = WeaponsComposite(weapons = arrayOf(laser))
+    weapons.shoot()
 
+    val rocket = RocketLauncher()
+
+    weapons = WeaponsComposite(weapons = arrayOf(laser, rocket))
+    weapons.shoot()
 }
 

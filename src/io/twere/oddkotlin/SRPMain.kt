@@ -46,7 +46,6 @@ class DoorCloser(door: CanBeClosed) {
     }
 }
 
-
 fun main(args: Array<String>) {
     val door = PodBayDoor()
 
