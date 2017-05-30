@@ -245,7 +245,7 @@ final class EmmettBrown(private val timeMachine: TimeTraveling) {
  
 > ⚠ Emmet Brown is given the `DeLorean` as a `TimeTraveling` device, not the concrete class `DeLorean`.
 
-```koltin
+```kotlin
 
     fun travelInTime(time: String): String {
         return timeMachine.travelInTime(time)
