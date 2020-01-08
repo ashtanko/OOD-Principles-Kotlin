@@ -1,6 +1,7 @@
-package io.twere.oddkotlin
+package odd
 
 /**
+ * The Interface Segregation Principle
  * Created by adamluissean on 13.06.16.
  */
 
@@ -16,18 +17,18 @@ interface PayloadHaving {
     var payload: String
 }
 
-final class InternationalSpaceStation {
+class InternationalSpaceStation {
 
     fun fetchPayload(vehicle: PayloadHaving): String {
-        return "Deployer ${vehicle.payload} at April 10, 2016, 11:23 UTC"
+        return "Deployed ${vehicle.payload} at April 10, 2016, 11:23 UTC"
     }
 }
 
-final class OfCourseIStillLoveYouBarge : LandingSiteHaving {
+class OfCourseIStillLoveYouBarge : LandingSiteHaving {
     override var landingSite = "a barge on the Atlantic Ocean"
 }
 
-final class SpaceXCRS8 : Landing, PayloadHaving {
+class SpaceXCRS8 : Landing, PayloadHaving {
 
     override var payload = "BEAM and some Cube Sats"
 
@@ -36,7 +37,7 @@ final class SpaceXCRS8 : Landing, PayloadHaving {
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     val crs8 = SpaceXCRS8()
     val barge = OfCourseIStillLoveYouBarge()
     val spaceStation = InternationalSpaceStation()

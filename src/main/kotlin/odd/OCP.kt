@@ -1,6 +1,7 @@
-package io.twere.oddkotlin
+package odd
 
 /**
+ * The Open Closed Principle
  * Created by adamluissean on 09.06.16.
  */
 
@@ -8,25 +9,25 @@ interface CanShoot {
     fun shoot(): String
 }
 
-final class LaserBeam : CanShoot {
+class LaserBeam : CanShoot {
     override fun shoot(): String {
         return "Ziiiip!"
     }
 }
 
-final class WeaponsComposite(var weapons: Array<CanShoot>) {
+class WeaponsComposite(var weapons: Array<CanShoot>) {
     fun shoot(): String {
         return weapons.map { it -> it.shoot() }.get(0)
     }
 }
 
-final class RocketLauncher : CanShoot {
+class RocketLauncher : CanShoot {
     override fun shoot(): String {
         return "Whoosh!"
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     val laser = LaserBeam()
     var weapons = WeaponsComposite(weapons = arrayOf(laser))
     weapons.shoot()
