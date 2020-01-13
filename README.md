@@ -11,9 +11,6 @@ S.O.L.I.D.
 * [The Dependency Inversion Principle](#-the-dependency-inversion-principle)
 
 
-```kotlin
-```
-
 # 🔐 The Single Responsibility Principle
 
 A class should have one, and only one, reason to change. ([read more](https://docs.google.com/open?id=0ByOwmqah_nuGNHEtcU5OekdDMkk))
@@ -31,7 +28,7 @@ interface CanBeClosed {
 }
 
 // I'm the door. I have an encapsulated state and you can change it using methods.
-final class PodBayDoor : CanBeOpened, CanBeClosed {
+class PodBayDoor : CanBeOpened, CanBeClosed {
 
     private enum class State {
         Open, Closed
@@ -49,22 +46,21 @@ final class PodBayDoor : CanBeOpened, CanBeClosed {
 }
 
 // I'm only responsible for opening, no idea what's inside or how to close.
-class DoorOpener(door: CanBeOpened) {
-
-    val door: CanBeOpened = door
+class DoorOpener(private val door: CanBeOpened) {
 
     fun execute() {
         door.open()
     }
+
 }
 
 // I'm only responsible for closing, no idea what's inside or how to open.
-class DoorCloser(door: CanBeClosed) {
-    val door: CanBeClosed = door
+class DoorCloser(private val door: CanBeClosed) {
 
     fun execute() {
         door.closed()
     }
+
 }
 
 val door = PodBayDoor()
@@ -103,16 +99,16 @@ interface CanShoot {
 }
 
 // I'm a laser beam. I can shoot.
-final class LaserBeam : CanShoot {
+class LaserBeam : CanShoot {
     override fun shoot(): String {
         return "Ziiiip!"
     }
 }
 
 // I have weapons and trust me I can fire them all at once. Boom! Boom! Boom!
-final class WeaponsComposite(var weapons: Array<CanShoot>) {
+class WeaponsComposite(var weapons: Array<CanShoot>) {
     fun shoot(): String {
-        return weapons.map { it -> it.shoot() }.get(0)
+        return weapons.map { it.shoot() }[0]
     }
 }
 
@@ -128,7 +124,7 @@ I'm a rocket launcher. I can shoot a rocket.
 
 ```kotlin
 
-final class RocketLauncher : CanShoot {
+class RocketLauncher : CanShoot {
     override fun shoot(): String {
         return "Whoosh!"
     }
@@ -150,6 +146,41 @@ Example:
 
 ```kotlin
 
+private interface Bird {
+    fun eat() {
+        println("Eat!")
+    }
+}
+
+private interface FlightBird : Bird {
+    fun fly() {
+        println("Fly!")
+    }
+}
+
+private interface NonFlightBird : Bird {
+
+}
+
+private class Crow : FlightBird {
+
+    override fun fly() {
+        super.fly()
+
+        println("It is Crow - it can fly")
+    }
+
+    override fun eat() {
+        super.eat()
+    }
+}
+
+private class Ostrich : NonFlightBird {
+    override fun eat() {
+        super.eat()
+        println("It is Ostrich - it can eat but it can't fly")
+    }
+}
 ```
 
 
@@ -161,54 +192,36 @@ Example:
  
 ```kotlin
 
-// I have a landing site.
+
 interface LandingSiteHaving {
     var landingSite: String
 }
 
-// I can land on LandingSiteHaving objects.
 interface Landing {
     fun landOn(on: LandingSiteHaving): String
 }
 
-// I have payload.
 interface PayloadHaving {
     var payload: String
 }
 
-// I can fetch payload from vehicle (ex. via Canadarm).
-final class InternationalSpaceStation {
-
-```
- 
-> ⚠ Space station has no idea about landing capabilities of SpaceXCRS8.
-
-```kotlin
+class InternationalSpaceStation {
 
     fun fetchPayload(vehicle: PayloadHaving): String {
-        return "Deployer ${vehicle.payload} at April 10, 2016, 11:23 UTC"
+        return "Deployed ${vehicle.payload} at April 10, 2016, 11:23 UTC"
     }
 }
 
-// I'm a barge - I have landing site (well, you get the idea).
-final class OfCourseIStillLoveYouBarge : LandingSiteHaving {
+class OfCourseIStillLoveYouBarge : LandingSiteHaving {
     override var landingSite = "a barge on the Atlantic Ocean"
 }
 
-// I have payload and can land on things having landing site.
-// I'm a very limited Space Vehicle, I know.
-final class SpaceXCRS8 : Landing, PayloadHaving {
+class SpaceXCRS8 : Landing, PayloadHaving {
 
     override var payload = "BEAM and some Cube Sats"
 
-```
- 
-> ⚠ CRS8 knows only about the landing site information.
-
-```kotlin
-
     override fun landOn(on: LandingSiteHaving): String {
-            return "Landed on ${on.landingSite} at April 8, 2016 20:52 UTC"
+        return "Landed on ${on.landingSite} at April 8, 2016 20:52 UTC"
     }
 }
 
@@ -229,33 +242,26 @@ Example:
 
 ```kotlin
 
-interface TimeTraveling {
-    fun travelInTime(time: String): String
+interface CoffeeMachine {
+    fun brew(coffee:Coffee)
 }
 
-final class DeLorean : TimeTraveling {
-    override fun travelInTime(time: String): String {
-        return "Used Flux Capacitor and travelled in time by: ${time}s"
+interface Coffee
+
+class Arabica : Coffee
+
+
+class Rabusta : Coffee
+
+class BrewMachine : CoffeeMachine {
+    override fun brew(coffee: Coffee) {
+        println("Brew: $coffee")
     }
 }
 
-final class EmmettBrown(private val timeMachine: TimeTraveling) {
-
-```
- 
-> ⚠ Emmet Brown is given the `DeLorean` as a `TimeTraveling` device, not the concrete class `DeLorean`.
-
-```kotlin
-
-    fun travelInTime(time: String): String {
-        return timeMachine.travelInTime(time)
-    }
-}
-
-val timeMachine = DeLorean()
-
-val mastermind = EmmettBrown(timeMachine)
-mastermind.travelInTime("3445433")
+val brewMachine = BrewMachine()
+brewMachine.brew(Arabica())
+brewMachine.brew(Rabusta())
 
 ```
 

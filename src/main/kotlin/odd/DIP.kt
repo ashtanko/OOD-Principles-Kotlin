@@ -5,26 +5,27 @@ package odd
  * Created by adamluissean on 13.06.16.
  */
 
-interface TimeTraveling {
-    fun travelInTime(time: String): String
+interface CoffeeMachine {
+    fun brew(coffee:Coffee)
 }
 
-class DeLorean : TimeTraveling {
-    override fun travelInTime(time: String): String {
-        return "Used Flux Capacitor and travelled in time by: ${time}s"
-    }
-}
+interface Coffee
 
-class EmmettBrown(private val timeMachine: TimeTraveling) {
-    fun travelInTime(time: String): String {
-        return timeMachine.travelInTime(time)
+class Arabica : Coffee
+
+
+class Rabusta : Coffee
+
+class BrewMachine : CoffeeMachine {
+    override fun brew(coffee: Coffee) {
+        println("Brew: $coffee")
     }
 }
 
 fun main() {
 
-    val timeMachine = DeLorean()
+    val brewMachine = BrewMachine()
+    brewMachine.brew(Arabica())
+    brewMachine.brew(Rabusta())
 
-    val mastermind = EmmettBrown(timeMachine)
-    mastermind.travelInTime("3445433")
 }
